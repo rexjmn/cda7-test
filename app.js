@@ -1,7 +1,11 @@
 
 // le return va retouner soit true soit false
 function verifyEmail(email) {
-   return email.includes('@)')
+   return email.includes('@')
 }
 
-module.exports = verifyEmail
+function verifyPassword(password) {
+   return password.length >= 8
+}
+
+module.exports = {verifyEmail, verifyPassword}
