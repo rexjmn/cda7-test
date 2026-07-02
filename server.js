@@ -1,5 +1,6 @@
-const {app} = require('./app');
-//pas besoin d'importer express car avec l'objet au dessus a hérité de toutes les méthodes
+const { app } = require('./app');
 
-app.listen(3000, () => 
-    console.log('Server tourne sur le port 3000'))
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () =>
+    console.log(`Server tourne sur le port ${PORT}`));
