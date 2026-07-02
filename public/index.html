@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="logingForm">
+        <label for="Email">Email</label>
+        <input type="text" id="Email" name="Email">
+        <label for="Password">Password</label>
+        <input type="password" id="Password" name="Password">
+        <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+    <script>
+        document.getElementById("logingForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("Email").value;
+            const password = document.getElementById("Password").value;
+            const message = document.getElementById("message");
+            const response = await fetch("http://localhost:3000/login", {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            document.getElementById("message").textContent = data.message;
+        });
+
+    </script>
+</body>
+</html>
