@@ -2,33 +2,37 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
     steps:
-       name: recuperer le code du projet
-       uses: actions/checkout@v4
+      - name: recuperer le code du projet
+        uses: actions/checkout@v4
 
-       name: installer Nodejs
-       uses: actions/setup-node@v4
+      - name: installer Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-       name: installer les dependances
-       run: npm install
+      - name: installer les dependances
+        run: npm install
 
-       name: exécuter les tests unitaires
-       run: npm run test:unit
+      - name: installer les navigateurs Playwright
+        run: npx playwright install --with-deps chromium
 
-       name: exécuter les tests integration
-       run: npm run test:integration
+      - name: exécuter les tests unitaires
+        run: npm run test:unit
 
-       name: lancer les tests e2e
-       run: npm run test:e2e
-       
-       name : Déclencher le déploiement
-       if: success()
-       run: curl -X POST "${{ secrets.DEPLOYING_SECRET}}" 
-       
+      - name: exécuter les tests integration
+        run: npm run test:integration
+
+      - name: lancer les tests e2e
+        run: npm run test:e2e
+
+      - name: Déclencher le déploiement
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: curl -X POST "${{ secrets.DEPLOYING_SECRET }}"
