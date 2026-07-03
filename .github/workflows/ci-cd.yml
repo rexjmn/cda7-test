@@ -1,0 +1,34 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+       name: recuperer le code du projet
+       uses: actions/checkout@v4
+
+       name: installer Nodejs
+       uses: actions/setup-node@v4
+
+       name: installer les dependances
+       run: npm install
+
+       name: exécuter les tests unitaires
+       run: npm run test:unit
+
+       name: exécuter les tests integration
+       run: npm run test:integration
+
+       name: lancer les tests e2e
+       run: npm run test:e2e
+       
+       name : Déclencher le déploiement
+       if: success()
+       run: curl -X POST "${{ secrets.DEPLOYING_SECRET}}" 
+       
